@@ -20,5 +20,9 @@ public class test : MonoBehaviour
                 Debug.Log("Button " + i + " was pressed!");
             }
         }
+        float hatHorizontal = Input.GetAxis("Axis5"); 
+        float hatVertical = Input.GetAxis("Axis6");
+        Debug.Log(hatHorizontal);
+        
     }
 }
