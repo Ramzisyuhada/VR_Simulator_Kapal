@@ -25,31 +25,38 @@ public class SimpleFSM : FSM
         foreach(var  obj in GameObject.FindGameObjectsWithTag("WandarPoint")) pointList.Add(obj);
         FindNextPoint();
     }
-
+    private float currentSpeed;
     private void UpdateRaceStatet()
     {
+        // Deteksi apakah sudah mencapai titik tujuan
         if (Vector3.Distance(transform.position, Nextpost) <= 50f)
         {
             Debug.Log("Mencapai titik tujuan, mencari titik berikutnya...");
             FindNextPoint();
         }
 
-        // Rotasi objek ke arah target (Nextpost)
+        // Kontrol kecepatan
+        if (currentSpeed < 50f)
+        {
+            currentSpeed += 10f * Time.deltaTime;
+        }
+        else
+        {
+            currentSpeed -= 10f * Time.deltaTime;
+        }
+
         Quaternion targetRotation = Quaternion.LookRotation(Nextpost - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f);
 
-        // Rotasi yaw (hanya satu arah, sesuai keinginan)
         transform.Rotate(Vector3.up * 25f * Time.deltaTime, Space.Self);
 
-        // Rotasi tambahan untuk roll dan pitch
-        transform.Rotate(Vector3.forward * 150f * Time.deltaTime, Space.Self); // Roll
-        transform.Rotate(Vector3.right * 50f * Time.deltaTime, Space.Self);   // Pitch
+        transform.Rotate(Vector3.forward * 20f * Time.deltaTime, Space.Self);
+
+        transform.Rotate(Vector3.right * 10f * Time.deltaTime, Space.Self);   
 
         // Translasi maju
-        transform.Translate(Vector3.forward * Time.deltaTime * 50f, Space.Self);
+        transform.Translate(Vector3.forward * Time.deltaTime * currentSpeed, Space.Self);
     }
-
-
     private void UpdateNosStatet()
     {
 
