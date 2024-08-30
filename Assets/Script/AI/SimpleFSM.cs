@@ -8,12 +8,16 @@ using UnityEngine.Windows;
 
 public class SimpleFSM : FSM
 {
+
+
     public enum FSMState
     {
         None,
         Race,
         Nos,
     }
+
+    [SerializeField] private AudioSource engineSoundSource;
 
 
     public FSMState State;
@@ -28,7 +32,6 @@ public class SimpleFSM : FSM
     private float currentSpeed;
     private void UpdateRaceStatet()
     {
-        // Deteksi apakah sudah mencapai titik tujuan
         if (Vector3.Distance(transform.position, Nextpost) <= 50f)
         {
             Debug.Log("Mencapai titik tujuan, mencari titik berikutnya...");
@@ -57,11 +60,54 @@ public class SimpleFSM : FSM
         // Translasi maju
         transform.Translate(Vector3.forward * Time.deltaTime * currentSpeed, Space.Self);
     }
+
+    bool b = false;
+  /*  private void COntoh()
+    {
+        if(b)
+        {
+            b = !b;
+        }
+
+    }*/
     private void UpdateNosStatet()
     {
 
     }
+
+
+    private void AudioSystem()
+    {
+        if (engineSoundSource == null)
+            return;
+
+        if (State == FSMState.Race)
+        {
+            engineSoundSource.pitch = Mathf.Lerp(engineSoundSource.pitch, 1.5f, 10f * Time.deltaTime);
+
+           /* if (planeIsDead)
+            {
+                engineSoundSource.volume = Mathf.Lerp(engineSoundSource.volume, 0f, 10f * Time.deltaTime);
+            }
+            else
+            {
+                engineSoundSource.volume = Mathf.Lerp(engineSoundSource.volume, maxEngineSound, 1f * Time.deltaTime);
+            }*/
+        }
+       /* else if (airplaneState == AirplaneState.Landing)
+        {
+            engineSoundSource.pitch = Mathf.Lerp(engineSoundSource.pitch, defaultSoundPitch, 1f * Time.deltaTime);
+            engineSoundSource.volume = Mathf.Lerp(engineSoundSource.volume, 0f, 1f * Time.deltaTime);
+        }
+        else if (airplaneState == AirplaneState.Takeoff)
+        {
+            engineSoundSource.pitch = Mathf.Lerp(engineSoundSource.pitch, turboSoundPitch, 1f * Time.deltaTime);
+            engineSoundSource.volume = Mathf.Lerp(engineSoundSource.volume, maxEngineSound, 1f * Time.deltaTime);
+        }*/
+    }
     protected override void FSMUpdate() {
+        AudioSystem();
+
         switch (State)
         {
             case FSMState.Race: UpdateRaceStatet(); break; 
@@ -94,8 +140,8 @@ public class SimpleFSM : FSM
 
         float rndRadius = 2f;
         Vector3 rndPosition = new Vector3(UnityEngine.Random.Range(-rndRadius, rndRadius), UnityEngine.Random.Range(-rndRadius, rndRadius), UnityEngine.Random.Range(-rndRadius, rndRadius));
-        Nextpost += rndPosition;
-    }
+/*        Nextpost += rndPosition;
+*/    }
 
 
     private bool IsInCurrentRange(Vector3 pos)
